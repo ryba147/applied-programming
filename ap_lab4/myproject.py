@@ -7,8 +7,7 @@ v = 3
 
 @application.route('/')
 def index():
-    return render_template('hello.html', url_v=v)
-    # return redirect(url_for('hello_world'))
+    return redirect(url_for('hello_world', url_v=v))
 
 
 @application.route('/api/v1/hello-world-<int:url_v>')  # route() decorator tells Flask what URL should trigger our function
