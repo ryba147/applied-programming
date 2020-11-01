@@ -2,7 +2,7 @@ from flask import Flask
 from flask import render_template, redirect, url_for
 
 application = Flask(__name__)
-v = 3
+v = 3  # variant by default
 
 
 @application.route('/')
