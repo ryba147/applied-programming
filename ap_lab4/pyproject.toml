@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "ap_lab4"
+version = "0.1.0"
+description = ""
+authors = ["ryba147 <54861049+ryba147@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Flask = "^1.1.2"
+gunicorn = "^20.0.4"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
