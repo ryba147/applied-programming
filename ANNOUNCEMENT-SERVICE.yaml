@@ -1,0 +1,392 @@
+---
+openapi: 3.0.0
+info:
+  title: Announcement service
+  description: |
+    **Variant 3** | AP Lab 5<br>
+    Створити сервіс оголошень + CRUD із двома рівнями повідомлень. Оголошення повинні бути локальними та публічними. Локальні оголошення тільки для користувачів, що знаходяться в тому ж місці. Публічні для всіх, навіть для не користувачів сервісу.
+  contact:
+    email: taras.vilinskyi.knm.2019@lpnu.ua
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/ryba147/AP-LAB-5/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: announcement
+  description: Operations with announcements
+- name: user
+  description: Operations with users
+paths:
+  /announcement:
+    get:
+      tags:
+      - announcement
+      summary: Get all public announcements from db
+      operationId: getAnnouncements
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Announcement'
+    post:
+      tags:
+      - announcement
+      summary: Add a new announcement to db
+      operationId: addAnnouncement
+      requestBody:
+        $ref: '#/components/requestBodies/Announcement'
+      responses:
+        "201":
+          description: Announcement was created successfully
+        "401":
+          description: Access token is missing or invalid
+      security:
+      - announcement_auth:
+        - write:a
+  /announcement/nearby:
+    get:
+      tags:
+      - announcement
+      summary: Get local announcements from db
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Announcement'
+              example:
+                id: 1
+                name: new announcement
+                description: lorem ipsum
+                announcement_type: local
+                pub_date: 2020-11-23T00:43:08.101Z
+                location: Hotodotska Street
+        "401":
+          description: Access token is missing or invalid
+      security:
+      - announcement_auth:
+        - read:a
+  /announcement/{announcementId}:
+    put:
+      tags:
+      - announcement
+      summary: Update announcement info
+      operationId: editAnnouncement
+      parameters:
+      - name: announcementId
+        in: path
+        description: Id of an announcement to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: integer64
+      responses:
+        "200":
+          description: Announcement was edited successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Announcement'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Announcement'
+        "400":
+          description: Invalid announcement id
+        "404":
+          description: Announcement was not found
+      security:
+      - announcement_auth:
+        - write:a
+    delete:
+      tags:
+      - announcement
+      summary: Delete announcement by id
+      operationId: deleteAnnouncement
+      parameters:
+      - name: announcementId
+        in: path
+        description: Id of an announcement to be found
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: integer64
+      responses:
+        "200":
+          description: Announcement was deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Announcement'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Announcement'
+        "400":
+          description: Invalid ID
+        "404":
+          description: Announcement was not found
+      security:
+      - announcement_auth:
+        - delete:a
+  /user:
+    get:
+      tags:
+      - user
+      summary: Get user list from db
+      operationId: getUsers
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags:
+      - user
+      summary: Create new user
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "201":
+          description: User was created successfully
+  /user/login:
+    get:
+      tags:
+      - user
+      summary: Log in
+      operationId: loginUser
+      parameters:
+      - name: username
+        in: query
+        description: Username
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: password
+        in: query
+        description: Password
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: The number of allowed requests in the current period
+              style: simple
+              explode: false
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: Date in UTC when token expires
+              style: simple
+              explode: false
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+        "400":
+          description: Invalid username or password
+  /user/logout:
+    get:
+      tags:
+      - user
+      summary: Log out
+      operationId: logoutUser
+      responses:
+        "200":
+          description: ok
+  /user/{username}:
+    get:
+      tags:
+      - user
+      summary: Find user by username
+      operationId: getUserByUsername
+      parameters:
+      - name: username
+        in: path
+        description: Username
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Announcement was edited successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Invalid username provided
+        "404":
+          description: User was not found
+    put:
+      tags:
+      - user
+      summary: Update announcement info
+      operationId: updateUserInfo
+      parameters:
+      - name: username
+        in: path
+        description: Name of user to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: User was edited successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Invalid username
+        "404":
+          description: User was not foun
+    delete:
+      tags:
+      - user
+      summary: Delete user from db
+      operationId: deleteUser
+      parameters:
+      - name: username
+        in: path
+        description: Name of user to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: User was deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Invalid username
+        "404":
+          description: User was not found
+components:
+  schemas:
+    Announcement:
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        announcement_type:
+          type: string
+          enum:
+          - public
+          - local
+        pub_date:
+          type: string
+          format: date-time
+        location:
+          type: string
+      xml:
+        name: Announcement
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        password:
+          type: string
+        location:
+          type: string
+      xml:
+        name: User
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+  requestBodies:
+    Announcement:
+      description: Data of announcement object to add to db
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Announcement'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Announcement'
+      required: true
+    User:
+      description: Creation of user object
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/User'
+      required: true
+  securitySchemes:
+    announcement_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://example.com/oauth/auth
+          scopes:
+            write:a: Add announcemets to db
+            read:a: View announcements
+            delete:a: Delete an announcement
