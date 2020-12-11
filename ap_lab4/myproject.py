@@ -7,7 +7,7 @@ application = Flask(__name__)
 application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lab.db'
 db = SQLAlchemy(application)
 
-#from models import User
+from models import User
 
 
 @application.route('/')
