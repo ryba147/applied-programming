@@ -1,19 +1,24 @@
 from flask import Flask
-from flask import render_template, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+import os
+
 
 application = Flask(__name__)
-v = 3  # variant by default
+application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lab.db'
+db = SQLAlchemy(application)
+
+from models import User
 
 
 @application.route('/')
-def index():
-    return redirect(url_for('hello_world', url_v=v))
+def hello():
+    return "Hello World!"
 
 
-@application.route('/api/v1/hello-world-<int:url_v>')  # route() decorator tells Flask what URL should trigger our function
-def hello_world(url_v):
-    return render_template('hello.html', var=url_v)  # or return 'Hello World!'
+@application.route('/<name>')
+def hello_name(name):
+    return "Hello {}!".format(name)
 
 
 if __name__ == '__main__':
-    application.run(host='0.0.0.0')
+    application.run(debug=True)
