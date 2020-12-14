@@ -1,7 +1,6 @@
 from .models import *
 from marshmallow import Schema, fields, validate, ValidationError
 from announcements import ma, db
-from flask_bcrypt import generate_password_hash
 
 
 class UserSchema(ma.Schema):
@@ -9,10 +8,8 @@ class UserSchema(ma.Schema):
     username = fields.Str(validate=validate.Length(min=1, max=64))
     firstname = fields.Str(validate=validate.Length(min=1, max=64))
     lastname = fields.Str(validate=validate.Length(min=1, max=64))
-    password = fields. password = fields.Function(
-        deserialize=lambda obj: generate_password_hash(obj), load_only=True
-    )
-    location = fields.Integer()
+    password = fields.Str(validate=validate.Length(min=4, max=14))
+    location = fields.Str(validate=validate.Length(min=1, max=64))
 
     class Meta:
         model = User
@@ -40,7 +37,7 @@ class AnnouncementSchema(ma.Schema):
     name = fields.Str(validate=validate.Length(min=1, max=64))
     description = fields.Str(validate=validate.Length(min=1, max=64))
     pub_date = fields.Str(validate=validate.Length(min=1,max=12), allow_none=True)
-    location = fields.Integer()
+    location = fields.Str(validate=validate.Length(min=1, max=64))
     announcement_type = fields.Integer()
 
     class Meta:
@@ -50,12 +47,3 @@ class AnnouncementSchema(ma.Schema):
 announcement_schema = AnnouncementSchema()
 announcement_schemas = AnnouncementSchema(many=True)
 
-
-class Location(ma.Schema):
-    id = fields.Integer()
-    name = fields.Integer()
-
-class StatusResponse(Schema):
-    code = fields.Integer()
-    type = fields.String(default="OK")
-    message = fields.String(default="OK")
