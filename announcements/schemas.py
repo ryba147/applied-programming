@@ -9,7 +9,7 @@ class UserSchema(ma.Schema):
     username = fields.Str(validate=validate.Length(min=1, max=64))
     firstname = fields.Str(validate=validate.Length(min=1, max=64))
     lastname = fields.Str(validate=validate.Length(min=1, max=64))
-    password = fields. password = fields.Function(
+    password = fields.password = fields.Function(
         deserialize=lambda obj: generate_password_hash(obj), load_only=True
     )
     location = fields.Integer()
@@ -39,7 +39,7 @@ class AnnouncementSchema(ma.Schema):
     authorid = fields.Integer()
     name = fields.Str(validate=validate.Length(min=1, max=64))
     description = fields.Str(validate=validate.Length(min=1, max=64))
-    pub_date = fields.Str(validate=validate.Length(min=1,max=12), allow_none=True)
+    pub_date = fields.Str(validate=validate.Length(min=1, max=12), allow_none=True)
     location = fields.Integer()
     announcement_type = fields.Integer()
 
@@ -54,6 +54,7 @@ announcement_schemas = AnnouncementSchema(many=True)
 class Location(ma.Schema):
     id = fields.Integer()
     name = fields.Integer()
+
 
 class StatusResponse(Schema):
     code = fields.Integer()
