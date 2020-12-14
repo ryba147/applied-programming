@@ -9,7 +9,8 @@ def verify(username, password):
     user = User.query.filter_by(username=username).first()
     if user is None:
         abort(401)
-    return user.password == password
+    # return user.password == password
+    return bcrypt.check_password_hash(user.password, password)
 
 
 @application.route("/user", methods=['GET'])

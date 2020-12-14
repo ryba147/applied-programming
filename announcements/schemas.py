@@ -9,9 +9,7 @@ class UserSchema(ma.Schema):
     username = fields.Str(validate=validate.Length(min=1, max=64))
     firstname = fields.Str(validate=validate.Length(min=1, max=64))
     lastname = fields.Str(validate=validate.Length(min=1, max=64))
-    password = fields.password = fields.Function(
-        deserialize=lambda obj: generate_password_hash(obj), load_only=True
-    )
+    password = fields.Str(validate=validate.Length(min=4, max=14))
     location = fields.Integer()
 
     class Meta:
