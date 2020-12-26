@@ -1,9 +1,9 @@
 from announcements import db, ma
 
+
 class User(db.Model):
-    #__tablename__ = 'User'
-    id = db.Column(db.Integer, nullable=False)
-    username = db.Column(db.String(64), index=True, unique=True, primary_key=True)
+    id = db.Column(db.Integer,nullable = False, primary_key=True)
+    username = db.Column(db.String(64),unique=True)
     firstname = db.Column(db.String(64),nullable=False)
     lastname = db.Column(db.String(64),nullable=False)
     password = db.Column(db.String(64),nullable=False)
@@ -35,6 +35,3 @@ class Announcement(db.Model):
     announcement_type = db.Column(db.Integer,db.ForeignKey('announcement_type.id') ,nullable=False)
     def __repr__(self):
         return '<Announcement {}>'.format(self.id)
-
-
-

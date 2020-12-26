@@ -14,19 +14,18 @@ def user_method():
         if User.query.filter_by(username=query_username).first() is not None:
             return jsonify(message='user with this name exists', status=403)
         else:
-            id = request.json['id']
             username = request.json['username']
             firstname = request.json['firstname']
             lastname = request.json['lastname']
             password = request.json['password']
             location = request.json['location']
-            test_user = User(id=id, username=username, firstname=firstname, lastname=lastname, password=password,
+            test_user = User(username=username, firstname=firstname, lastname=lastname, password=password,
                              location=location)
             user_data = user_schema.dump(test_user)
             try:
                 UserSchema().load(user_data)
                 h_query_pass = bcrypt.generate_password_hash(password)
-                test_user = User(id=id, username=username, firstname=firstname, lastname=lastname, password=h_query_pass,
+                test_user = User(username=username, firstname=firstname, lastname=lastname, password=h_query_pass,
                                  location=location)
                 db.session.add(test_user)
                 db.session.commit()
@@ -37,9 +36,9 @@ def user_method():
                 return jsonify(message=err.messages, status=405)
 
 
-@application.route("/user/<username>/", methods=['GET'])
+@application.route("/user/<username>", methods=['GET'])
 def get_user(username):
-    user_username = User.query.get(username)
+    user_username = User.query.filter_by(username=username).first()
     if user_username is None:
         return jsonify(message='user not found', status=404)
     return user_schema.jsonify(user_username)
@@ -60,9 +59,9 @@ def login():
     return jsonify(message='wrong username or password', status=403)
 
 
-@application.route("/user/<username>/", methods=['PUT'])
+@application.route("/user/<username>", methods=['PUT'])
 def user_update(username):
-    user_up = User.query.get(username)
+    user_up = User.query.filter_by(username=username).first()
     if user_up is None:
         return jsonify(message='user not found', status=404)
     try:
@@ -82,7 +81,7 @@ def user_update(username):
 
 @application.route("/user/<username>/", methods=['DELETE'])
 def delete_user(username):
-    user_username = User.query.get(username)
+    user_username = User.query.filter_by(username=username).first()
     if user_username is None:
         return jsonify(message='user not found', status=404)
     db.session.delete(user_username)
@@ -107,7 +106,7 @@ def announcement_method():
         announcement_type = request.json['announcement_type']
 
         test_announcement = Announcement(id=id, authorid=authorid, name=name,
-           description=description, pub_date=pub_date, location=location, announcement_type=announcement_type)
+        description=description, pub_date=pub_date, location=location, announcement_type=announcement_type)
         announcement_data = announcement_schema.dump(test_announcement)
         try:
             AnnouncementSchema().load(announcement_data)
@@ -160,5 +159,4 @@ def delete_announcement(announcement_id):
     db.session.delete(announcement_by_id)
     db.session.commit()
     return announcement_schema.jsonify(announcement_by_id)
-
 

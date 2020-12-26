@@ -5,7 +5,7 @@ from announcements import ma, db
 
 class UserSchema(ma.Schema):
     id = fields.Integer(allow_none=True)
-    username = fields.Str(validate=validate.Length(min=1, max=64))
+    username = fields.Str(validate=validate.Length(min=1, max=64), allow_none=False)
     firstname = fields.Str(validate=validate.Length(min=1, max=64))
     lastname = fields.Str(validate=validate.Length(min=1, max=64))
     password = fields.Str(validate=validate.Length(min=4, max=14))
@@ -32,7 +32,7 @@ announcement_type_schemas = AnnouncementTypeSchema(many=True)
 
 
 class AnnouncementSchema(ma.Schema):
-    id = fields.Integer(unique=True)
+    id = fields.Integer(allow_none=True)
     authorid = fields.Integer()
     name = fields.Str(validate=validate.Length(min=1, max=64))
     description = fields.Str(validate=validate.Length(min=1, max=64))
@@ -46,4 +46,3 @@ class AnnouncementSchema(ma.Schema):
 
 announcement_schema = AnnouncementSchema()
 announcement_schemas = AnnouncementSchema(many=True)
-
