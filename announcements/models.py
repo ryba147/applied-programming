@@ -4,7 +4,7 @@ from announcements import db, ma
 class User(db.Model):
     # __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, unique=True, primary_key=True)
+    username = db.Column(db.String(64), index=True, unique=True)
     firstname = db.Column(db.String(64), nullable=False)
     lastname = db.Column(db.String(64), nullable=False)
     password = db.Column(db.String(64), nullable=False)
