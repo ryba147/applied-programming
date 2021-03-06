@@ -1,30 +1,21 @@
-alembic @ file:///Users/momo/Library/Caches/pypoetry/artifacts/0e/1c/e4/ac76b5bee931060d4168f965e85b4348bd828c3c2058657c87632dd955/alembic-1.4.3-py2.py3-none-any.whl
-attrs @ file:///Users/momo/Library/Caches/pypoetry/artifacts/7f/e7/44/32ca3c400bb4d8a2f1a91d1d3f22bbaee2f4727a037aad898fbf5d36ce/attrs-20.2.0-py2.py3-none-any.whl
-click @ file:///Users/momo/Library/Caches/pypoetry/artifacts/30/bc/bf/e00ffd8f0edf0294942e70e80e42a839bd2649d2c5b864e6389e526d2a/click-7.1.2-py2.py3-none-any.whl
-Flask @ file:///Users/momo/Library/Caches/pypoetry/artifacts/0a/8b/ac/e30b4f067b6a1660b6e04691990900956f4e864868c7fa0f377389f368/Flask-1.1.2-py2.py3-none-any.whl
-Flask-Bcrypt @ file:///Users/momo/Library/Caches/pypoetry/artifacts/c3/b2/b4/e6b19de1ec4f601dd8e484bf913019214b2b72da380543670f0dda7319/Flask-Bcrypt-0.7.1.tar.gz
-Flask-HTTPAuth @ file:///Users/momo/Library/Caches/pypoetry/artifacts/07/2a/e4/6d239c2148f42c133465f82a11f04f05a810575bd22c979926d3001d40/Flask_HTTPAuth-4.2.0-py2.py3-none-any.whl
-flask-marshmallow @ file:///Users/momo/Library/Caches/pypoetry/artifacts/d6/25/80/3987dfe958d7baf36e9f731130b8adb0d4161d7157677ed0a994f77400/flask_marshmallow-0.14.0-py2.py3-none-any.whl
-Flask-Migrate @ file:///Users/momo/Library/Caches/pypoetry/artifacts/3c/76/bb/43f0f6cf031ede4fb3a11d734e7821edcaf9bbba05421bdd23eb611c01/Flask_Migrate-2.5.3-py2.py3-none-any.whl
-Flask-Script @ file:///Users/momo/Library/Caches/pypoetry/artifacts/c9/af/6e/73716d4127ae409e14898e77ec9584b6b63acfbf367d33590a797fbd77/Flask-Script-2.0.6.tar.gz
-Flask-SQLAlchemy @ file:///Users/momo/Library/Caches/pypoetry/artifacts/60/43/12/080b1890ab1e3cf00ed837d6b954748528fc85af952dea8bc52c7ea380/Flask_SQLAlchemy-2.4.4-py2.py3-none-any.whl
-gunicorn @ file:///Users/momo/Library/Caches/pypoetry/artifacts/b5/fa/14/5790a1a5da3a5144bc505c39d8003baa6f64040928b75d0e0779683287/gunicorn-20.0.4-py2.py3-none-any.whl
-itsdangerous @ file:///Users/momo/Library/Caches/pypoetry/artifacts/ed/be/b7/3afa53339fde1838049443e48288a0348e1c636069b0c90f199510d48a/itsdangerous-1.1.0-py2.py3-none-any.whl
-Jinja2 @ file:///Users/momo/Library/Caches/pypoetry/artifacts/a0/8d/d0/dce9f8c04cdcf457adcd58424bdacab8a7a2c3c42854fd3c0d2135046e/Jinja2-2.11.2-py2.py3-none-any.whl
-Mako @ file:///Users/momo/Library/Caches/pypoetry/artifacts/9b/af/a3/2e37b4b97ccbbc5fecf69d31154f2c2ee3fc4a34809cb4a1daf5ed72e1/Mako-1.1.3-py2.py3-none-any.whl
-MarkupSafe @ file:///Users/momo/Library/Caches/pypoetry/artifacts/c6/f0/df/47b8e78a3e4aa51bccefa7a95dc021176d8911e65b89b9ee8fbf3c601e/MarkupSafe-1.1.1-cp38-cp38-win32.whl
-marshmallow @ file:///Users/momo/Library/Caches/pypoetry/artifacts/5b/8d/70/bc83a7f80e1c5cd994f8bdd90731d058c433cd03d2c5e0647194620bd9/marshmallow-3.9.1-py2.py3-none-any.whl
-marshmallow-sqlalchemy @ file:///Users/momo/Library/Caches/pypoetry/artifacts/45/e0/3a/88266bcdd3648bb62df093b25252862090844366d00b1b5c3907a8f31f/marshmallow_sqlalchemy-0.24.1-py2.py3-none-any.whl
-more-itertools @ file:///Users/momo/Library/Caches/pypoetry/artifacts/b7/39/2d/8628adfd013f3bf1658dafd470eef925f88b584f61666e69578a88b3b0/more_itertools-8.6.0-py3-none-any.whl
-packaging @ file:///Users/momo/Library/Caches/pypoetry/artifacts/09/cd/29/a435224f3203dfba4af491065632910aadb6f3ddd87ce3c6590ac29e7a/packaging-20.4-py2.py3-none-any.whl
-pluggy @ file:///Users/momo/Library/Caches/pypoetry/artifacts/9c/e5/0b/2d64d03361a081edeb5d2ec5f286ccf9719587781fbf6822e1b6384c27/pluggy-0.13.1-py2.py3-none-any.whl
-py @ file:///Users/momo/Library/Caches/pypoetry/artifacts/f5/51/7d/d8aec03f59299351465053794c7b1f0e0e7a918e4a67911664f83929af/py-1.9.0-py2.py3-none-any.whl
-pycparser @ file:///Users/momo/Library/Caches/pypoetry/artifacts/f1/03/25/40eb46f7bede64f78ba073e2141b8216e611cbcde72e3117c326560101/pycparser-2.20-py2.py3-none-any.whl
-pyparsing @ file:///Users/momo/Library/Caches/pypoetry/artifacts/da/e7/3d/1780282f558e5fd157bf708b28b8ba0d08323ef6bc5b6396139ce38a0b/pyparsing-2.4.7-py2.py3-none-any.whl
-pytest @ file:///Users/momo/Library/Caches/pypoetry/artifacts/9d/40/6b/50d2cb06df545acea43c65379c5456f4fbc703115a703bc7cd433ddf70/pytest-5.4.3-py3-none-any.whl
-python-dateutil @ file:///Users/momo/Library/Caches/pypoetry/artifacts/1e/2c/dc/0e811c2299b40168ee1da03bc13c11762ce9fa96eb867ad22280db11fc/python_dateutil-2.8.1-py2.py3-none-any.whl
-python-editor @ file:///Users/momo/Library/Caches/pypoetry/artifacts/88/e4/9a/6a3b58d3811aabb356fe1af49b223e67e18505daf666e0dca62c12f260/python_editor-1.0.4-py3-none-any.whl
-six @ file:///Users/momo/Library/Caches/pypoetry/artifacts/be/98/c7/69fe6fea7a59659af1c6260899226129565330b1e07c9c5b3769be76bf/six-1.15.0-py2.py3-none-any.whl
-SQLAlchemy @ file:///Users/momo/Library/Caches/pypoetry/artifacts/0e/1a/7b/05377e1e70b0b1a3fa66f3c490567d4c1f44f8441289f91c4f36abb944/SQLAlchemy-1.3.20-cp38-cp38-macosx_10_14_x86_64.whl
-wcwidth @ file:///Users/momo/Library/Caches/pypoetry/artifacts/36/68/e2/7232f431072d5e8aeec124120b9a1d095d45da10311d271fac10982473/wcwidth-0.2.5-py2.py3-none-any.whl
-Werkzeug @ file:///Users/momo/Library/Caches/pypoetry/artifacts/71/cb/8f/ea556c118c51e63201517bf1ce46027e851bef2077e67f333349deacf1/Werkzeug-1.0.1-py2.py3-none-any.whl
+alembic==1.5.6
+bcrypt==3.2.0
+cffi==1.14.5
+click==7.1.2
+Flask==1.1.2
+Flask-Bcrypt==0.7.1
+Flask-HTTPAuth==4.2.0
+flask-marshmallow==0.14.0
+Flask-Migrate==2.7.0
+Flask-SQLAlchemy==2.4.4
+itsdangerous==1.1.0
+Jinja2==2.11.3
+Mako==1.1.4
+MarkupSafe==1.1.1
+marshmallow==3.10.0
+pycparser==2.20
+python-dateutil==2.8.1
+python-editor==1.0.4
+six==1.15.0
+SQLAlchemy==1.3.23
+Werkzeug==1.0.1
