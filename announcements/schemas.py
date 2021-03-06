@@ -25,7 +25,7 @@ class AnnouncementTypeSchema(ma.Schema):
     description = fields.Str(validate=validate.Length(min=1, max=1024))
 
     class Meta:
-        model = Announcement_type
+        model = AnnouncementType
 
 
 announcement_type_schema = AnnouncementTypeSchema()
