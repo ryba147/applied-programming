@@ -1,7 +1,5 @@
 alembic @ file:///Users/momo/Library/Caches/pypoetry/artifacts/0e/1c/e4/ac76b5bee931060d4168f965e85b4348bd828c3c2058657c87632dd955/alembic-1.4.3-py2.py3-none-any.whl
 attrs @ file:///Users/momo/Library/Caches/pypoetry/artifacts/7f/e7/44/32ca3c400bb4d8a2f1a91d1d3f22bbaee2f4727a037aad898fbf5d36ce/attrs-20.2.0-py2.py3-none-any.whl
-bcrypt @ file:///Users/momo/Library/Caches/pypoetry/artifacts/08/29/2c/d3731f97742bab98fc6a2d348c34099def2ae9151b0c669b6536e7a581/bcrypt-3.2.0-cp36-abi3-macosx_10_9_x86_64.whl
-cffi @ file:///Users/momo/Library/Caches/pypoetry/artifacts/b0/d7/a6/d7f247e290412073e6441b73256adc09b2ab349559823a46a5482ed996/cffi-1.14.4-cp38-cp38-macosx_10_9_x86_64.whl
 click @ file:///Users/momo/Library/Caches/pypoetry/artifacts/30/bc/bf/e00ffd8f0edf0294942e70e80e42a839bd2649d2c5b864e6389e526d2a/click-7.1.2-py2.py3-none-any.whl
 Flask @ file:///Users/momo/Library/Caches/pypoetry/artifacts/0a/8b/ac/e30b4f067b6a1660b6e04691990900956f4e864868c7fa0f377389f368/Flask-1.1.2-py2.py3-none-any.whl
 Flask-Bcrypt @ file:///Users/momo/Library/Caches/pypoetry/artifacts/c3/b2/b4/e6b19de1ec4f601dd8e484bf913019214b2b72da380543670f0dda7319/Flask-Bcrypt-0.7.1.tar.gz
