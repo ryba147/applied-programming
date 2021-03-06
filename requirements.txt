@@ -12,7 +12,6 @@ gunicorn @ file:///Users/momo/Library/Caches/pypoetry/artifacts/b5/fa/14/5790a1a
 itsdangerous @ file:///Users/momo/Library/Caches/pypoetry/artifacts/ed/be/b7/3afa53339fde1838049443e48288a0348e1c636069b0c90f199510d48a/itsdangerous-1.1.0-py2.py3-none-any.whl
 Jinja2 @ file:///Users/momo/Library/Caches/pypoetry/artifacts/a0/8d/d0/dce9f8c04cdcf457adcd58424bdacab8a7a2c3c42854fd3c0d2135046e/Jinja2-2.11.2-py2.py3-none-any.whl
 Mako @ file:///Users/momo/Library/Caches/pypoetry/artifacts/9b/af/a3/2e37b4b97ccbbc5fecf69d31154f2c2ee3fc4a34809cb4a1daf5ed72e1/Mako-1.1.3-py2.py3-none-any.whl
-MarkupSafe @ file:///Users/momo/Library/Caches/pypoetry/artifacts/c6/f0/df/47b8e78a3e4aa51bccefa7a95dc021176d8911e65b89b9ee8fbf3c601e/MarkupSafe-1.1.1-cp38-cp38-macosx_10_9_x86_64.whl
 marshmallow @ file:///Users/momo/Library/Caches/pypoetry/artifacts/5b/8d/70/bc83a7f80e1c5cd994f8bdd90731d058c433cd03d2c5e0647194620bd9/marshmallow-3.9.1-py2.py3-none-any.whl
 marshmallow-sqlalchemy @ file:///Users/momo/Library/Caches/pypoetry/artifacts/45/e0/3a/88266bcdd3648bb62df093b25252862090844366d00b1b5c3907a8f31f/marshmallow_sqlalchemy-0.24.1-py2.py3-none-any.whl
 more-itertools @ file:///Users/momo/Library/Caches/pypoetry/artifacts/b7/39/2d/8628adfd013f3bf1658dafd470eef925f88b584f61666e69578a88b3b0/more_itertools-8.6.0-py3-none-any.whl
