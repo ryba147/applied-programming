@@ -28,9 +28,10 @@ def post_user():
     else:
         firstname = request.json['firstname']
         lastname = request.json['lastname']
+        email = request.json['email']
         password = request.json['password']
         location = request.json['location']
-        test_user = User(username=username, firstname=firstname, lastname=lastname, password=password,
+        test_user = User(username=username, firstname=firstname, email=email, lastname=lastname, password=password,
                          location=location)
         user_data = user_schema.dump(test_user)
         try:
