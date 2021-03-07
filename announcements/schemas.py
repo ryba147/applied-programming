@@ -7,7 +7,7 @@ from flask_bcrypt import generate_password_hash
 class UserSchema(ma.Schema):
     id = fields.Integer(allow_none=True)
     username = fields.Str(validate=validate.Length(min=1, max=64))
-    email = fields.Str(validate=validate.Email)
+    email = fields.Str(validate=validate.Length(min=1, max=20))
     firstname = fields.Str(validate=validate.Length(min=1, max=64))
     lastname = fields.Str(validate=validate.Length(min=1, max=64))
     password = fields.Str(validate=validate.Length(min=4, max=14))

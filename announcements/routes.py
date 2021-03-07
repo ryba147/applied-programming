@@ -37,7 +37,7 @@ def post_user():
         try:
             UserSchema().load(user_data)
             h_query_pass = bcrypt.generate_password_hash(password)
-            test_user = User(username=username, firstname=firstname, lastname=lastname,
+            test_user = User(username=username, email=email, firstname=firstname, lastname=lastname,
                              password=h_query_pass,
                              location=location)
             db.session.add(test_user)
