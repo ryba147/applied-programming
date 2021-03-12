@@ -30,16 +30,17 @@ def post_user():
         lastname = request.json['lastname']
         email = request.json['email']
         password = request.json['password']
-        location = request.json['location']
+        role = request.json['role']
+        # location = request.json['location']
         test_user = User(username=username, firstname=firstname, email=email, lastname=lastname, password=password,
-                         location=location)
+                         role=role)
         user_data = user_schema.dump(test_user)
         try:
             UserSchema().load(user_data)
             h_query_pass = bcrypt.generate_password_hash(password)
             test_user = User(username=username, email=email, firstname=firstname, lastname=lastname,
                              password=h_query_pass,
-                             location=location)
+                             role=role)
             db.session.add(test_user)
             db.session.commit()
             return user_schema.jsonify(test_user)
