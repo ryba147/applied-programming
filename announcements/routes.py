@@ -43,7 +43,7 @@ def post_user():
                              role=role)
             db.session.add(test_user)
             db.session.commit()
-            return user_schema.jsonify(test_user)
+            return user_schema.jsonify(test_user), 201
         except ValidationError as err:
             return jsonify(message=err.messages), 405
 
