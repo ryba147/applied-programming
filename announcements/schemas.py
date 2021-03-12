@@ -12,7 +12,7 @@ class UserSchema(ma.Schema):
     lastname = fields.Str(validate=validate.Length(min=1, max=60))
     password = fields.Str(validate=validate.Length(min=4, max=60))
     role = fields.Str()
-    location = fields.Integer()
+    # location = fields.Integer()
 
     class Meta:
         model = User

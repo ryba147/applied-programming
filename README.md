@@ -9,3 +9,7 @@
 3. Проект запускається WSGI-сервером Gunicorn за допомогою точки входу wsgi командою *gunicorn wsgi:application*.  
 4. Перехід за адресою http://localhost:8000 (або оберіть інший порт для запуску за допомогою ```gunicorn -w 2 -b 0.0.0.0:8080 myproject:application```) спричинить **переадресацію** на http://localhost:8000/api/v1/hello-world-3. Також можна одразу переходити за адресою http://localhost:8000/api/v1/hello-world-3 (замість 3 можна вказати й інший номер варіанту). <br>
 Очікуваний результат: ```Hello World! 3``` й **response 200 OK** на GET запит.
+
+heroku login
+heroku git:remote -a flask-lpnu
+git push heroku flaskapp-deploy:main
