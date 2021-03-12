@@ -136,6 +136,7 @@ def post_announcement():
 
 
 @application.route("/announcement/nearby/", methods=['GET'])
+@auth.login_required
 def get_nearby_announcement():
     all_announcements_by_location = Announcement.query.filter_by(announcement_type='1').all()
     return announcement_schemas.jsonify(all_announcements_by_location)

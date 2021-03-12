@@ -1,8 +1,8 @@
-"""AnnouncementType
+"""empty message
 
-Revision ID: c3a94fe294fe
+Revision ID: 4eae903e781a
 Revises: 
-Create Date: 2021-03-06 02:03:42.662034
+Create Date: 2021-03-12 17:21:47.549093
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c3a94fe294fe'
+revision = '4eae903e781a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,11 +32,14 @@ def upgrade():
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=64), nullable=False),
-    sa.Column('firstname', sa.String(length=64), nullable=False),
-    sa.Column('lastname', sa.String(length=64), nullable=False),
-    sa.Column('password', sa.String(length=64), nullable=False),
-    sa.Column('location', sa.Integer(), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.Column('email', sa.String(length=45), nullable=False),
+    sa.Column('firstname', sa.String(length=50), nullable=False),
+    sa.Column('lastname', sa.String(length=50), nullable=False),
+    sa.Column('password', sa.String(length=50), nullable=False),
+    sa.Column('role', sa.String(length=40), nullable=False),
+    sa.Column('location', sa.String(length=128), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email')
     )
     op.create_index(op.f('ix_user_username'), 'user', ['username'], unique=True)
     op.create_table('announcement',

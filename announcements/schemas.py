@@ -11,6 +11,7 @@ class UserSchema(ma.Schema):
     firstname = fields.Str(validate=validate.Length(min=1, max=64))
     lastname = fields.Str(validate=validate.Length(min=1, max=64))
     password = fields.Str(validate=validate.Length(min=4, max=14))
+    role = fields.Str()
     location = fields.Integer()
 
     class Meta:

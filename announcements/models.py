@@ -6,10 +6,11 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
     email = db.Column(db.String(45), unique=True, nullable=False)
-    firstname = db.Column(db.String(64), nullable=False)
-    lastname = db.Column(db.String(64), nullable=False)
-    password = db.Column(db.String(64), nullable=False)
-    location = db.Column(db.Integer)
+    firstname = db.Column(db.String(50), nullable=False)
+    lastname = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(50), nullable=False)
+    role = db.Column(db.String(40), default="Regular", nullable=False)
+    location = db.Column(db.String(128), nullable=True)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
