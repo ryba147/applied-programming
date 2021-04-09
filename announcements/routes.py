@@ -1,3 +1,5 @@
+from sqlalchemy import and_
+
 from announcements import application, db, auth, bcrypt
 from .schemas import *
 from .models import *
@@ -56,20 +58,20 @@ def get_user(username):
     return user_schema.jsonify(user_username)
 
 
-@application.route("/user/logout/", methods=['GET'])
+@application.route("/user/logout", methods=['GET'])
 @auth.login_required
 def logout():
     return jsonify(message='Logout successful'), 200
 
 
-@application.route("/user/login/", methods=['GET'])
+@application.route("/user/login", methods=['GET'])
 def login():
     query_username = request.args.get('username')
     query_pass = request.args.get('password')
     user = User.query.filter_by(username=query_username).first()
     if user is not None:
         if bcrypt.check_password_hash(user.password, query_pass):
-            return jsonify(message='Login successful'), 200
+            return user_schema.jsonify(user), 200
     return jsonify(message='Wrong username or password'), 404
 
 
@@ -95,36 +97,36 @@ def user_update(username):
         return jsonify(message=err.messages), 405
 
 
-@application.route("/user/<username>/", methods=['DELETE'])
+@application.route("/user", methods=['DELETE'])
 @auth.login_required
-def delete_user(username):
-    user_username = User.query.get(username)
-    if user_username is None:
+def delete_user():
+    user = User.query.filter_by(username=request.args.get('username')).first()
+    if user is None:
         return jsonify(message='user not found'), 404
-    db.session.delete(user_username)
-    db.session.commit()
-    return user_schema.jsonify(user_username)
+    else:
+        db.session.delete(user)
+        db.session.commit()
+        return user_schema.jsonify(user)
 
 
-@application.route("/announcement/", methods=['GET'])
+@application.route("/announcements", methods=['GET'])
 def announcement_method():
     all_announcements = Announcement.query.all()
     return announcement_schemas.jsonify(all_announcements)
 
 
-@application.route("/announcement/", methods=['POST'])
+@application.route("/announcements", methods=['POST'])
 @auth.login_required
 def post_announcement():
     post_id = request.json['id']
-    authorid = request.json['authorid']
+    author_id = request.json['author_id']
     name = request.json['name']
     description = request.json['description']
-    pub_date = request.json['pub_date']
     location = request.json['location']
     announcement_type = request.json['announcement_type']
 
-    test_announcement = Announcement(id=post_id, authorid=authorid, name=name,
-                                     description=description, pub_date=pub_date, location=location,
+    test_announcement = Announcement(id=post_id, author_id=author_id, name=name,
+                                     description=description, location=location,
                                      announcement_type=announcement_type)
     announcement_data = announcement_schema.dump(test_announcement)
     try:
@@ -136,11 +138,19 @@ def post_announcement():
         return jsonify(message=err.messages), 405
 
 
-@application.route("/announcement/nearby/", methods=['GET'])
+@application.route("/announcements/nearby", methods=['GET'])
 @auth.login_required
 def get_nearby_announcement():
-    all_announcements_by_location = Announcement.query.filter_by(announcement_type='1').all()
-    return announcement_schemas.jsonify(all_announcements_by_location)
+    query_location = request.args.get('location')
+    application.logger.info(query_location)
+    if query_location is not None:
+        nearby_announcements = Announcement.query \
+            .join(Location, Announcement.id == Location.id) \
+            .filter(and_(Announcement.announcement_type == 1, Location.name == query_location))
+    else:
+        nearby_announcements = Announcement.query.filter_by(announcement_type=1).all()
+    # application.logger.info(nearby_announcements)
+    return announcement_schemas.jsonify(nearby_announcements)
 
 
 @application.route("/announcement/<int:announcement_id>/", methods=['GET'])
@@ -151,22 +161,22 @@ def get_announcement(announcement_id):
     return announcement_schema.jsonify(announcement_by_id)
 
 
-@application.route("/announcement/<int:announcement_id>/", methods=['PUT'])
+@application.route("/announcement/<announcement>/", methods=['PUT'])
 @auth.login_required
-def announcement_update(announcement_id):
-    announcement_id = Announcement.query.get(announcement_id)
-    if announcement_id is None:
+def announcement_update(announcement):
+    announcement = Announcement.query.get(announcement)
+    if announcement is None:
         return jsonify(message='Announcement not found'), 404
     try:
-        announcement_id.authorid = request.json['authorid']
-        announcement_id.name = request.json['name']
-        announcement_id.location = request.json['location']
-        announcement_id.description = request.json['description']
-        announcement_id.pub_date = request.json['pub_date']
-        announcement_id.announcement_type = request.json['announcement_type']
+        announcement.author_id = request.json['author_id']
+        announcement.name = request.json['name']
+        announcement.location = request.json['location']
+        announcement.type_name = request.json['description']
+        announcement.pub_date = request.json['pub_date']
+        announcement.announcement_type = request.json['announcement_type']
 
         db.session.commit()
-        return announcement_schema.jsonify(announcement_id)
+        return announcement_schema.jsonify(announcement)
     except ValidationError as err:
         return jsonify(message=err.messages), 405
 
@@ -174,9 +184,9 @@ def announcement_update(announcement_id):
 @application.route("/announcement/<int:announcement_id>/", methods=['DELETE'])
 @auth.login_required
 def delete_announcement(announcement_id):
-    announcement_by_id = Announcement.query.get(announcement_id)
-    if announcement_by_id is None:
+    announcement = Announcement.query.get(announcement_id)
+    if announcement is None:
         return jsonify(message='Announcement not found'), 404
-    db.session.delete(announcement_by_id)
+    db.session.delete(announcement)
     db.session.commit()
-    return announcement_schema.jsonify(announcement_by_id)
+    return announcement_schema.jsonify(announcement)

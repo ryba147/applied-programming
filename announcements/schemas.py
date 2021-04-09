@@ -36,7 +36,7 @@ announcement_type_schemas = AnnouncementTypeSchema(many=True)
 
 class AnnouncementSchema(ma.Schema):
     id = fields.Integer(unique=True)
-    authorid = fields.Integer()
+    author_id = fields.Integer()
     name = fields.Str(validate=validate.Length(min=1, max=64))
     description = fields.Str(validate=validate.Length(min=1, max=64))
     pub_date = fields.Str(validate=validate.Length(min=1, max=12), allow_none=True)
