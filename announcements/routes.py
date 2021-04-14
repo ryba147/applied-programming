@@ -1,10 +1,19 @@
-from sqlalchemy import and_
+import os
+import uuid
 
-from announcements import application, db, auth, bcrypt
+from sqlalchemy import and_
+from werkzeug.utils import secure_filename
+
+from announcements import application, db, auth, bcrypt, ALLOWED_EXTENSIONS
 from .schemas import *
 from .models import *
-from flask import jsonify, request, abort
+from flask import jsonify, request, abort, render_template
 from marshmallow import ValidationError
+
+
+@application.route('/')
+def temp():
+    return render_template('hello.html')
 
 
 @auth.verify_password
@@ -14,6 +23,36 @@ def verify(username, password):
         abort(401)
     # return user.password == password
     return bcrypt.check_password_hash(user.password, password)
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@application.route("/upload_file", methods=['POST'])
+def upload_file():
+    target = application.config['UPLOAD_FOLDER']
+    if not os.path.isdir(target):
+        os.mkdir(target)
+
+    # check if the post request has the file part
+    if 'file' not in request.files:
+        # flash('No file part')
+        return jsonify(message='No file part'), 404
+    file = request.files['file']
+
+    # if user does not select file, browser also
+    # submit an empty part without filename
+    if file.filename == '':
+        # flash('No selected file')
+        return jsonify(message='No selected file'), 404
+
+    if file and allowed_file(file.filename):
+        file_extension = '.' + file.filename.rsplit('.', 1)[1].lower()
+        upload_dest = '/'.join([target, str(uuid.uuid4())]) + file_extension
+        file.save(os.path.join(upload_dest))
+        return jsonify(message='Success'), 200
 
 
 @application.route("/users", methods=['GET'])

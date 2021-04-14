@@ -7,7 +7,8 @@ class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     username = db.Column(db.String(60), index=True, unique=True, nullable=False)
-    email = db.Column(db.String(60), unique=True, nullable=False)  # 60
+    image_dest = db.Column(db.String(255), nullable=True)
+    email = db.Column(db.String(60), unique=True, nullable=False)
     firstname = db.Column(db.String(60), nullable=False)
     lastname = db.Column(db.String(60), nullable=False)
     password = db.Column(db.String(60), nullable=False)
@@ -22,6 +23,7 @@ class Announcement(db.Model):
     __tablename__ = 'announcement'
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    image_dest = db.Column(db.String(255), nullable=True)
     title = db.Column(db.String(64), nullable=False)
     description = db.Column(db.Text, nullable=True)
     pub_date = db.Column(db.String(64), default=datetime.now(), nullable=True)
