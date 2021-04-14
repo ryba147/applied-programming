@@ -5,7 +5,7 @@ from flask_bcrypt import generate_password_hash
 
 
 class UserSchema(ma.Schema):
-    id = fields.Integer()
+    id = fields.Integer(allow_none=True)
     username = fields.Str(validate=validate.Length(min=1, max=60))
     email = fields.Str(validate=validate.Length(min=1, max=60))
     firstname = fields.Str(validate=validate.Length(min=1, max=60))
@@ -23,7 +23,7 @@ user_schemas = UserSchema(many=True)
 
 
 class AnnouncementTypeSchema(ma.Schema):
-    id = fields.Integer()
+    id = fields.Integer(allow_none=True)
     description = fields.Str(validate=validate.Length(min=1, max=1024), allow_none=False)
 
     class Meta:
@@ -35,7 +35,7 @@ announcement_type_schemas = AnnouncementTypeSchema(many=True)
 
 
 class AnnouncementSchema(ma.Schema):
-    id = fields.Integer()
+    id = fields.Integer(allow_none=True)
     author_id = fields.Integer(allow_none=False)
     name = fields.Str(validate=validate.Length(min=1, max=64))
     description = fields.Str(validate=validate.Length(min=1, max=64), allow_none=True)
@@ -52,7 +52,7 @@ announcement_schemas = AnnouncementSchema(many=True)
 
 
 class Location(ma.Schema):
-    id = fields.Integer()
+    id = fields.Integer(allow_none=True)
     name = fields.Integer(allow_none=False)
 
 
