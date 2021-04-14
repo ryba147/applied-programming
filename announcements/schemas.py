@@ -5,14 +5,14 @@ from flask_bcrypt import generate_password_hash
 
 
 class UserSchema(ma.Schema):
-    id = fields.Integer(allow_none=True)
+    id = fields.Integer()
     username = fields.Str(validate=validate.Length(min=1, max=60))
     email = fields.Str(validate=validate.Length(min=1, max=60))
     firstname = fields.Str(validate=validate.Length(min=1, max=60))
     lastname = fields.Str(validate=validate.Length(min=1, max=60))
     password = fields.Str(validate=validate.Length(min=4, max=60))
     role = fields.Str()
-    # location = fields.Integer()
+    location = fields.Integer(allow_none=True)
 
     class Meta:
         model = User
@@ -23,8 +23,8 @@ user_schemas = UserSchema(many=True)
 
 
 class AnnouncementTypeSchema(ma.Schema):
-    id = fields.Integer(allow_none=True)
-    description = fields.Str(validate=validate.Length(min=1, max=1024))
+    id = fields.Integer()
+    description = fields.Str(validate=validate.Length(min=1, max=1024), allow_none=False)
 
     class Meta:
         model = AnnouncementType
@@ -35,13 +35,13 @@ announcement_type_schemas = AnnouncementTypeSchema(many=True)
 
 
 class AnnouncementSchema(ma.Schema):
-    id = fields.Integer(unique=True)
-    author_id = fields.Integer()
+    id = fields.Integer()
+    author_id = fields.Integer(allow_none=False)
     name = fields.Str(validate=validate.Length(min=1, max=64))
-    description = fields.Str(validate=validate.Length(min=1, max=64))
+    description = fields.Str(validate=validate.Length(min=1, max=64), allow_none=True)
     pub_date = fields.Str(validate=validate.Length(min=1, max=12), allow_none=True)
-    location = fields.Integer()
-    announcement_type = fields.Integer()
+    location = fields.Integer(allow_none=True)
+    type = fields.Integer(allow_none=False)
 
     class Meta:
         model = Announcement
@@ -53,7 +53,11 @@ announcement_schemas = AnnouncementSchema(many=True)
 
 class Location(ma.Schema):
     id = fields.Integer()
-    name = fields.Integer()
+    name = fields.Integer(allow_none=False)
+
+
+location_schema = AnnouncementSchema()
+location_schemas = AnnouncementSchema(many=True)
 
 
 class StatusResponse(Schema):

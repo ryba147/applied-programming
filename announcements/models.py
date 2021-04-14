@@ -34,8 +34,8 @@ class Announcement(db.Model):
 
 class AnnouncementType(db.Model):
     __tablename__ = 'announcement_type'
-    id = db.Column(db.Integer, nullable=False, primary_key=True)
-    type_name = db.Column(db.String(64), nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    name = db.Column(db.String(64), nullable=False)
 
     def __repr__(self):
         return '<AnnouncementType {}>'.format(self.id)
@@ -43,7 +43,7 @@ class AnnouncementType(db.Model):
 
 class Location(db.Model):
     __tablename__ = 'location'
-    id = db.Column(db.Integer, nullable=False, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
 
     def __repr__(self):
