@@ -1,14 +1,13 @@
+import base64
 import os
-import uuid
 
+from cloudinary.uploader import upload
+from cloudinary.utils import cloudinary_url
+from flask import jsonify, request, abort, render_template, make_response
 from sqlalchemy import and_
-from werkzeug.utils import secure_filename
 
-from announcements import application, db, auth, bcrypt, ALLOWED_EXTENSIONS
+from announcements import application, auth, bcrypt, ALLOWED_EXTENSIONS
 from .schemas import *
-from .models import *
-from flask import jsonify, request, abort, render_template
-from marshmallow import ValidationError
 
 
 @application.route('/')
@@ -49,10 +48,11 @@ def upload_file():
         return jsonify(message='No selected file'), 404
 
     if file and allowed_file(file.filename):
-        file_extension = '.' + file.filename.rsplit('.', 1)[1].lower()
-        upload_dest = '/'.join([target, str(uuid.uuid4())]) + file_extension
-        file.save(os.path.join(upload_dest))
-        return jsonify(message='Success'), 200
+        upload_result = upload(file)
+        # cloudinary_url(upload_result['public_id'])
+        # print(upload_result)
+        print(upload_result['secure_url'])
+        return jsonify(cloudinary_url(upload_result['secure_url'])), 200
 
 
 @application.route("/users", methods=['GET'])
@@ -109,8 +109,21 @@ def login():
     q_pass = request.args.get('password')
     user = User.query.filter_by(username=q_username).first()
     if user is not None:
+        user_data = user_schema.dump(user)
         if bcrypt.check_password_hash(user.password, q_pass):
-            return user_schema.jsonify(user), 200
+            basic_auth_token = base64.b64encode(
+                '{username}:{password}'.format(
+                    username=q_username,
+                    password=q_pass).encode()
+            ).decode()
+            # return user_schema.jsonify(user), 200
+            response = make_response(
+                jsonify(
+                    {"userData": UserSchema().load(user_data), "basicAuthToken": basic_auth_token}
+                ), 200
+            )
+            response.headers["Content-Type"] = "application/json"
+            return response
     return jsonify(message='Wrong username or password'), 404
 
 
@@ -155,15 +168,14 @@ def announcement_method():
 @application.route("/announcements", methods=['POST'])
 @auth.login_required
 def post_announcement():
-    post_id = request.json['id']
     author_id = request.json['author_id']
-    name = request.json['name']
+    title = request.json['title']
     description = request.json['description']
-    location = request.json['location']
-    announcement_type = request.json['announcement_type']
+    # location = request.json['location']
+    announcement_type = request.json['type']
 
-    test_announcement = Announcement(id=post_id, author_id=author_id, name=name,
-                                     description=description, location=location,
+    test_announcement = Announcement(author_id=author_id, title=title,
+                                     description=description,
                                      type=announcement_type)
     announcement_data = announcement_schema.dump(test_announcement)
     try:
