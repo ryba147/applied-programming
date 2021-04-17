@@ -4,7 +4,7 @@ import os
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 from flask import jsonify, request, abort, render_template, make_response
-from sqlalchemy import and_
+from sqlalchemy import and_, null
 
 from announcements import application, auth, bcrypt, ALLOWED_EXTENSIONS
 from .schemas import *
@@ -35,24 +35,24 @@ def upload_file():
     if not os.path.isdir(target):
         os.mkdir(target)
 
-    # check if the post request has the file part
     if 'file' not in request.files:
-        # flash('No file part')
-        return jsonify(message='No file part'), 404
+        return None
+
     file = request.files['file']
 
     # if user does not select file, browser also
     # submit an empty part without filename
     if file.filename == '':
         # flash('No selected file')
-        return jsonify(message='No selected file'), 404
+        return None
 
     if file and allowed_file(file.filename):
         upload_result = upload(file)
         # cloudinary_url(upload_result['public_id'])
-        # print(upload_result)
+        print(upload_result)
         print(upload_result['secure_url'])
-        return jsonify(cloudinary_url(upload_result['secure_url'])), 200
+        # return jsonify(cloudinary_url(upload_result['secure_url'])), 200
+        return upload_result['public_id']
 
 
 @application.route("/users", methods=['GET'])
@@ -160,7 +160,7 @@ def delete_user():
 
 
 @application.route("/announcements", methods=['GET'])
-def announcement_method():
+def get_announcements():
     all_announcements = Announcement.query.all()
     return announcement_schemas.jsonify(all_announcements)
 
@@ -168,21 +168,30 @@ def announcement_method():
 @application.route("/announcements", methods=['POST'])
 @auth.login_required
 def post_announcement():
-    author_id = request.json['author_id']
-    title = request.json['title']
-    description = request.json['description']
-    # location = request.json['location']
-    announcement_type = request.json['type']
+    author_id = request.form['author_id']
+    title = request.form['title']
+    description = request.form['description']
+    img_name = upload_file()
+    announcement_type = request.form['announcement_type']
+    event_date = request.form['event_date']
+    location = request.form['location']
 
-    test_announcement = Announcement(author_id=author_id, title=title,
+    print(author_id, title, datetime.now(), event_date, location, description, img_name, announcement_type)
+
+    announcement_data = Announcement(author_id=author_id, title=title,
                                      description=description,
+                                     pub_date=str(datetime.now().isoformat()),
+                                     event_date=str(event_date),
+                                     location=location,
+                                     img_name=img_name,
                                      type=announcement_type)
-    announcement_data = announcement_schema.dump(test_announcement)
+    print(announcement_data)
+    announcement_data = announcement_schema.dump(announcement_data)
     try:
         AnnouncementSchema().load(announcement_data)
-        db.session.add(test_announcement)
+        db.session.add(announcement_data)
         db.session.commit()
-        return announcement_schema.jsonify(test_announcement)
+        return announcement_schema.jsonify(announcement_data)
     except ValidationError as err:
         return jsonify(message=err.messages), 405
 

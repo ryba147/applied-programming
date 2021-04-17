@@ -23,12 +23,13 @@ class Announcement(db.Model):
     __tablename__ = 'announcement'
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    image_dest = db.Column(db.String(255), nullable=True)
+    img_name = db.Column(db.String(255), nullable=True)
     title = db.Column(db.String(64), nullable=False)
     description = db.Column(db.Text, nullable=True)
-    pub_date = db.Column(db.String(64), default=datetime.now(), nullable=True)
+    pub_date = db.Column(db.String(30), default=str(datetime.now()), nullable=True)
+    event_date = db.Column(db.String(30), nullable=True)
     location = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=True)
-    type = db.Column(db.Integer, db.ForeignKey('announcement_type.id'), nullable=False)
+    type = db.Column(db.Integer, db.ForeignKey('announcement_type.id'), default=1, nullable=False)
 
     def __repr__(self):
         return '<Announcement {}>'.format(self.title)

@@ -36,12 +36,14 @@ announcement_type_schemas = AnnouncementTypeSchema(many=True)
 
 class AnnouncementSchema(ma.Schema):
     id = fields.Integer(allow_none=True)
-    author_id = fields.Integer(allow_none=False)
+    author_id = fields.Integer(required=False)
     name = fields.Str(validate=validate.Length(min=1, max=64))
-    description = fields.Str(validate=validate.Length(min=1, max=64), allow_none=True)
-    pub_date = fields.Str(validate=validate.Length(min=1, max=12), allow_none=True)
+    description = fields.Str(validate=validate.Length(min=1, max=500), required=False)
+    img_name = fields.Str(allow_none=True)
+    pub_date = fields.Str(allow_none=True)
+    event_date = fields.Str(allow_none=True)
     location = fields.Integer(allow_none=True)
-    type = fields.Integer(allow_none=False)
+    type = fields.Integer(required=False)
 
     class Meta:
         model = Announcement
