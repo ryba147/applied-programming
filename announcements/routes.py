@@ -144,9 +144,9 @@ def user_update(user_id):
 @application.route("/users", methods=['DELETE'])
 @auth.login_required
 def delete_user():
-    user = User.query.filter_by(username=request.args.get('username')).first()
+    user = User.query.filter_by(id=request.args.get('id')).first()
     if user is None:
-        return jsonify(message='user not found'), 404
+        return jsonify(message='User not found'), 404
     else:
         db.session.delete(user)
         db.session.commit()
