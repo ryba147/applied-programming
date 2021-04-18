@@ -2,9 +2,8 @@ import base64
 import os
 
 from cloudinary.uploader import upload
-from cloudinary.utils import cloudinary_url
 from flask import jsonify, request, abort, render_template, make_response
-from sqlalchemy import and_, null
+from sqlalchemy import and_
 
 from announcements import application, auth, bcrypt, ALLOWED_EXTENSIONS
 from .schemas import *
@@ -20,7 +19,6 @@ def verify(username, password):
     user = User.query.filter_by(username=username).first()
     if user is None:
         abort(401)
-    # return user.password == password
     return bcrypt.check_password_hash(user.password, password)
 
 
@@ -29,28 +27,20 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@application.route("/upload_file", methods=['POST'])
+# Cloudinary API
+# @application.route("/upload_file", methods=['POST'])
 def upload_file():
-    target = application.config['UPLOAD_FOLDER']
-    if not os.path.isdir(target):
-        os.mkdir(target)
-
     if 'file' not in request.files:
         return None
-
     file = request.files['file']
 
     # if user does not select file, browser also
     # submit an empty part without filename
     if file.filename == '':
-        # flash('No selected file')
         return None
 
     if file and allowed_file(file.filename):
         upload_result = upload(file)
-        # cloudinary_url(upload_result['public_id'])
-        print(upload_result)
-        print(upload_result['secure_url'])
         # return jsonify(cloudinary_url(upload_result['secure_url'])), 200
         return upload_result['public_id']
 
@@ -89,9 +79,9 @@ def post_user():
             return jsonify(message=err.messages), 405
 
 
-@application.route("/users/<username>", methods=['GET'])
-def get_user(username):
-    user_username = User.query.filter_by(username=username).first()
+@application.route("/users/<int:user_id>", methods=['GET'])
+def get_user(user_id):
+    user_username = User.query.filter_by(id=user_id).first()
     if user_username is None:
         return jsonify(message='User not found'), 404
     return user_schema.jsonify(user_username)
@@ -127,22 +117,26 @@ def login():
     return jsonify(message='Wrong username or password'), 404
 
 
-@application.route("/users/<username>", methods=['PUT'])
+@application.route("/users/<int:user_id>", methods=['PUT'])
 @auth.login_required
-def user_update(username):
-    user_up = User.query.get(username)
-    if user_up is None:
+def user_update(user_id):
+    print(user_id)
+    user = User.query.filter_by(id=user_id).first()
+    print(user)
+    if user is None:
         abort(404, "User not found")
     try:
-        user_up.username = request.json['username']
-        user_up.firstname = request.json['firstname']
-        user_up.lastname = request.json['lastname']
-        user_up.location = request.json['location']
-        password = request.json['password']
-        if not bcrypt.check_password_hash(user_up.password, password):
-            user_up.password = bcrypt.generate_password_hash(password)
+        user.firstname = request.form['firstname']
+        user.lastname = request.form['lastname']
+        user.email = request.form['email']
+        # user.location = request.form['location']
+        user.img_name = upload_file()
+
+        # password = request.json['password']
+        # if not bcrypt.check_password_hash(user.password, password):
+        #     user.password = bcrypt.generate_password_hash(password)
         db.session.commit()
-        return user_schema.jsonify(user_up)
+        return user_schema.jsonify(user)
     except ValidationError as err:
         return jsonify(message=err.messages), 405
 
@@ -176,22 +170,20 @@ def post_announcement():
     event_date = request.form['event_date']
     location = request.form['location']
 
-    print(author_id, title, datetime.now(), event_date, location, description, img_name, announcement_type)
-
-    announcement_data = Announcement(author_id=author_id, title=title,
-                                     description=description,
+    test_announcement = Announcement(author_id=author_id,
+                                     title=title,
                                      pub_date=str(datetime.now().isoformat()),
-                                     event_date=str(event_date),
-                                     location=location,
+                                     event_date=event_date,
+                                     description=description,
                                      img_name=img_name,
+                                     location=location,
                                      type=announcement_type)
-    print(announcement_data)
-    announcement_data = announcement_schema.dump(announcement_data)
+    announcement_data = announcement_schema.dump(test_announcement)
     try:
         AnnouncementSchema().load(announcement_data)
-        db.session.add(announcement_data)
+        db.session.add(test_announcement)
         db.session.commit()
-        return announcement_schema.jsonify(announcement_data)
+        return announcement_schema.jsonify(test_announcement), 201
     except ValidationError as err:
         return jsonify(message=err.messages), 405
 

@@ -7,7 +7,7 @@ class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     username = db.Column(db.String(60), index=True, unique=True, nullable=False)
-    image_dest = db.Column(db.String(255), nullable=True)
+    img_name = db.Column(db.String(255), nullable=True)
     email = db.Column(db.String(60), unique=True, nullable=False)
     firstname = db.Column(db.String(60), nullable=False)
     lastname = db.Column(db.String(60), nullable=False)
@@ -26,7 +26,7 @@ class Announcement(db.Model):
     img_name = db.Column(db.String(255), nullable=True)
     title = db.Column(db.String(64), nullable=False)
     description = db.Column(db.Text, nullable=True)
-    pub_date = db.Column(db.String(30), default=str(datetime.now()), nullable=True)
+    pub_date = db.Column(db.String(30), default=str(datetime.now().isoformat()), nullable=True)
     event_date = db.Column(db.String(30), nullable=True)
     location = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=True)
     type = db.Column(db.Integer, db.ForeignKey('announcement_type.id'), default=1, nullable=False)

@@ -6,12 +6,13 @@ from flask_bcrypt import generate_password_hash
 
 class UserSchema(ma.Schema):
     id = fields.Integer(allow_none=True)
-    username = fields.Str(validate=validate.Length(min=1, max=60))
-    email = fields.Str(validate=validate.Length(min=1, max=60))
-    firstname = fields.Str(validate=validate.Length(min=1, max=60))
-    lastname = fields.Str(validate=validate.Length(min=1, max=60))
-    password = fields.Str(validate=validate.Length(min=4, max=60))
-    role = fields.Str()
+    username = fields.Str(validate=validate.Length(min=5, max=60), allow_none=True)
+    email = fields.Str(validate=validate.Length(min=5, max=60), allow_none=True)
+    firstname = fields.Str(validate=validate.Length(min=3, max=60), allow_none=True)
+    lastname = fields.Str(validate=validate.Length(min=3, max=60), allow_none=True)
+    img_name = fields.Str(allow_none=True)
+    password = fields.Str(validate=validate.Length(min=5, max=60), allow_none=True)
+    role = fields.Str(allow_none=True)
     location = fields.Integer(allow_none=True)
 
     class Meta:
@@ -36,14 +37,14 @@ announcement_type_schemas = AnnouncementTypeSchema(many=True)
 
 class AnnouncementSchema(ma.Schema):
     id = fields.Integer(allow_none=True)
-    author_id = fields.Integer(required=False)
-    name = fields.Str(validate=validate.Length(min=1, max=64))
-    description = fields.Str(validate=validate.Length(min=1, max=500), required=False)
+    author_id = fields.Integer(allow_none=True)
+    name = fields.Str(validate=validate.Length(min=0, max=64), allow_none=True)
+    description = fields.Str(validate=validate.Length(min=0, max=500), allow_none=True)
     img_name = fields.Str(allow_none=True)
     pub_date = fields.Str(allow_none=True)
     event_date = fields.Str(allow_none=True)
     location = fields.Integer(allow_none=True)
-    type = fields.Integer(required=False)
+    type = fields.Integer(allow_none=True)
 
     class Meta:
         model = Announcement
