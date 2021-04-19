@@ -4,8 +4,8 @@ import uuid
 
 from cloudinary.uploader import upload
 from flask import jsonify, request, abort, render_template, make_response
+from pip._vendor import requests
 from sqlalchemy import and_
-from werkzeug.utils import secure_filename
 
 from announcements import application, auth, bcrypt, ALLOWED_EXTENSIONS, APP_ROOT
 from .schemas import *
@@ -22,6 +22,14 @@ def verify(username, password):
     if user is None:
         abort(401)
     return bcrypt.check_password_hash(user.password, password)
+
+
+def generate_basic_auth_header(username, password):
+    return base64.b64encode(
+        '{username}:{password}'.format(
+            username=username,
+            password=password).encode()
+    ).decode()
 
 
 def allowed_file(filename):
@@ -96,10 +104,10 @@ def post_user():
 
 @application.route("/users/<int:user_id>", methods=['GET'])
 def get_user(user_id):
-    user_username = User.query.filter_by(id=user_id).first()
-    if user_username is None:
+    user = User.query.filter_by(id=user_id).first()
+    if user is None:
         return jsonify(message='User not found'), 404
-    return user_schema.jsonify(user_username)
+    return user_schema.jsonify(user), 200
 
 
 @application.route("/users/logout", methods=['GET'])
@@ -116,15 +124,11 @@ def login():
     if user is not None:
         user_data = user_schema.dump(user)
         if bcrypt.check_password_hash(user.password, q_pass):
-            basic_auth_token = base64.b64encode(
-                '{username}:{password}'.format(
-                    username=q_username,
-                    password=q_pass).encode()
-            ).decode()
             # return user_schema.jsonify(user), 200
             response = make_response(
                 jsonify(
-                    {"userData": UserSchema().load(user_data), "basicAuthToken": basic_auth_token}
+                    {"userData": UserSchema().load(user_data),
+                     "basicAuthToken": generate_basic_auth_header(q_username, q_pass)}
                 ), 200
             )
             response.headers["Content-Type"] = "application/json"
@@ -135,21 +139,27 @@ def login():
 @application.route("/users/<int:user_id>", methods=['PUT'])
 @auth.login_required
 def user_update(user_id):
-    print(user_id)
     user = User.query.filter_by(id=user_id).first()
-    print(user)
     if user is None:
         abort(404, "User not found")
     try:
         user.firstname = request.form['firstname']
         user.lastname = request.form['lastname']
-        user.email = request.form['email']
-        # user.location = request.form['location']
-        user.img_name = upload_file('to_cloud')
+        user.email = requests.utils.unquote(request.form['email'])
 
-        # password = request.json['password']
-        # if not bcrypt.check_password_hash(user.password, password):
-        #     user.password = bcrypt.generate_password_hash(password)
+        if len(request.form['location']) != 0:
+            user.location = int(request.form['location'])
+        if request.files['file'].filename != '':
+            user.img_name = upload_file('to_cloud')
+
+        password = request.form['password']
+        confirm_password = request.form['confirm-password']
+
+        if len(password) != 0:
+            if password != confirm_password:
+                raise ValidationError
+            if not bcrypt.check_password_hash(user.password, password):
+                user.password = bcrypt.generate_password_hash(password)
         db.session.commit()
         return user_schema.jsonify(user)
     except ValidationError as err:
