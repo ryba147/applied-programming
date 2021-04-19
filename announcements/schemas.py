@@ -1,7 +1,6 @@
 from .models import *
 from marshmallow import Schema, fields, validate, ValidationError
 from announcements import ma, db
-from flask_bcrypt import generate_password_hash
 
 
 class UserSchema(ma.Schema):
@@ -38,7 +37,7 @@ announcement_type_schemas = AnnouncementTypeSchema(many=True)
 class AnnouncementSchema(ma.Schema):
     id = fields.Integer(allow_none=True)
     author_id = fields.Integer(allow_none=True)
-    name = fields.Str(validate=validate.Length(min=0, max=64), allow_none=True)
+    title = fields.Str(validate=validate.Length(min=0, max=64), allow_none=True)
     description = fields.Str(validate=validate.Length(min=0, max=500), allow_none=True)
     img_name = fields.Str(allow_none=True)
     pub_date = fields.Str(allow_none=True)
@@ -54,13 +53,16 @@ announcement_schema = AnnouncementSchema()
 announcement_schemas = AnnouncementSchema(many=True)
 
 
-class Location(ma.Schema):
+class LocationSchema(ma.Schema):
     id = fields.Integer(allow_none=True)
     name = fields.Integer(allow_none=False)
 
+    class Meta:
+        model = Location
 
-location_schema = AnnouncementSchema()
-location_schemas = AnnouncementSchema(many=True)
+
+location_schema = LocationSchema()
+location_schemas = LocationSchema(many=True)
 
 
 class StatusResponse(Schema):

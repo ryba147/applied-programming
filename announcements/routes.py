@@ -82,7 +82,7 @@ def post_user():
     else:
         firstname = request.json['firstname']
         lastname = request.json['lastname']
-        email = request.json['email']
+        email = requests.utils.unquote(request.json['email'])
         password = request.json['password']
         role = request.json['role']
         # location = request.json['location']
@@ -121,6 +121,10 @@ def login():
     q_username = request.args.get('username')
     q_pass = request.args.get('password')
     user = User.query.filter_by(username=q_username).first()
+        # .join(Location, Location.id == User.location)
+
+    print(user)
+
     if user is not None:
         user_data = user_schema.dump(user)
         if bcrypt.check_password_hash(user.password, q_pass):

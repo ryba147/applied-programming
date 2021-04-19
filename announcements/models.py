@@ -13,7 +13,7 @@ class User(db.Model):
     lastname = db.Column(db.String(60), nullable=False)
     password = db.Column(db.String(60), nullable=False)
     role = db.Column(db.String(40), default="Regular", nullable=False)
-    location = db.Column(db.String(128), nullable=True)
+    location = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=True)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
