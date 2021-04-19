@@ -1,11 +1,13 @@
 import base64
 import os
+import uuid
 
 from cloudinary.uploader import upload
 from flask import jsonify, request, abort, render_template, make_response
 from sqlalchemy import and_
+from werkzeug.utils import secure_filename
 
-from announcements import application, auth, bcrypt, ALLOWED_EXTENSIONS
+from announcements import application, auth, bcrypt, ALLOWED_EXTENSIONS, APP_ROOT
 from .schemas import *
 
 
@@ -27,9 +29,8 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-# Cloudinary API
 # @application.route("/upload_file", methods=['POST'])
-def upload_file():
+def upload_file(upload_type):
     if 'file' not in request.files:
         return None
     file = request.files['file']
@@ -40,9 +41,23 @@ def upload_file():
         return None
 
     if file and allowed_file(file.filename):
-        upload_result = upload(file)
-        # return jsonify(cloudinary_url(upload_result['secure_url'])), 200
-        return upload_result['public_id']
+        # using Cloudinary API
+        if upload_type == 'to_cloud':
+            upload_result = upload(file)
+            # return jsonify(cloudinary_url(upload_result['secure_url'])), 200
+            return upload_result['public_id']
+
+        if upload_type == 'locally':
+            target = os.path.join(APP_ROOT, application.config['UPLOAD_FOLDER'])
+            if not os.path.isdir(target):
+                os.mkdir(target)
+            file_extension = '.' + file.filename.rsplit('.', 1)[1].lower()
+            unique_filename = str(uuid.uuid4()) + file_extension
+            file_dest = '/'.join([target, unique_filename])
+            file.save(os.path.join(file_dest))
+            print(os.path.join(file_dest))
+
+            return unique_filename
 
 
 @application.route("/users", methods=['GET'])
@@ -130,7 +145,7 @@ def user_update(user_id):
         user.lastname = request.form['lastname']
         user.email = request.form['email']
         # user.location = request.form['location']
-        user.img_name = upload_file()
+        user.img_name = upload_file('to_cloud')
 
         # password = request.json['password']
         # if not bcrypt.check_password_hash(user.password, password):
@@ -165,7 +180,7 @@ def post_announcement():
     author_id = request.form['author_id']
     title = request.form['title']
     description = request.form['description']
-    img_name = upload_file()
+    img_name = upload_file('to_cloud')
     announcement_type = request.form['announcement_type']
     event_date = request.form['event_date']
     location = request.form['location']
