@@ -5,7 +5,7 @@ import uuid
 from cloudinary.uploader import upload
 from flask import jsonify, request, abort, render_template, make_response
 from pip._vendor import requests
-from sqlalchemy import and_
+from sqlalchemy import and_, null
 
 from announcements import application, auth, bcrypt, ALLOWED_EXTENSIONS, APP_ROOT
 from .schemas import *
@@ -151,15 +151,15 @@ def user_update(user_id):
         user.lastname = request.form['lastname']
         user.email = requests.utils.unquote(request.form['email'])
 
-        if len(request.form['location']) != 0:
+        if request.form['location'].strip():
             user.location = int(request.form['location'])
-        if request.files['file'].filename != '':
+        if request.files['file'].filename.strip():
             user.img_name = upload_file('to_cloud')
 
         password = request.form['password']
         confirm_password = request.form['confirm-password']
 
-        if len(password) != 0:
+        if password.strip():
             if password != confirm_password:
                 raise ValidationError
             if not bcrypt.check_password_hash(user.password, password):
