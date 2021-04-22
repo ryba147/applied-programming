@@ -69,6 +69,7 @@ def upload_file(upload_type):
 
 
 @application.route("/users", methods=['GET'])
+@auth.login_required
 def get_users():
     all_users = User.query.all()
     return user_schemas.jsonify(all_users)
@@ -121,7 +122,7 @@ def login():
     q_username = request.args.get('username')
     q_pass = request.args.get('password')
     user = User.query.filter_by(username=q_username).first()
-        # .join(Location, Location.id == User.location)
+    # .join(Location, Location.id == User.location)
 
     print(user)
 
@@ -217,19 +218,25 @@ def post_announcement():
         return jsonify(message=err.messages), 405
 
 
-@application.route("/announcements/nearby", methods=['GET'])
+@application.route("/announcements/filter_by", methods=['GET'])
 @auth.login_required
 def get_nearby_announcement():
-    query_location = request.args.get('location')
-    application.logger.info(query_location)
-    if query_location is not None:
+    q_location = request.args.get('location')
+    q_author_id = request.args.get('author_id')
+
+    if q_author_id is not None:
+        application.logger.info(q_author_id)
+        nearby_announcements = Announcement.query.filter_by(author_id=q_author_id)
+        return announcement_schemas.jsonify(nearby_announcements)
+
+    if q_location is not None:
+        application.logger.info(q_location)
         nearby_announcements = Announcement.query \
             .join(Location, Announcement.id == Location.id) \
-            .filter(and_(Announcement.type == 1, Location.name == query_location))
-    else:
-        nearby_announcements = Announcement.query.filter_by(announcement_type=1).all()
-    # application.logger.info(nearby_announcements)
-    return announcement_schemas.jsonify(nearby_announcements)
+            .filter(and_(Announcement.type == 1, Location.name == q_location))
+        return announcement_schemas.jsonify(nearby_announcements)
+
+    return jsonify(message='not_found'), 404
 
 
 @application.route("/announcements/<int:announcement_id>/", methods=['GET'])
