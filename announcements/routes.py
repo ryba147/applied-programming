@@ -111,6 +111,14 @@ def get_user(user_id):
     return user_schema.jsonify(user), 200
 
 
+@application.route("/users/<username>", methods=['GET'])
+def get_user_by_uname(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        return jsonify(message='User not found'), 404
+    return user_schema.jsonify(user), 200
+
+
 @application.route("/users/logout", methods=['GET'])
 @auth.login_required
 def logout():
@@ -129,11 +137,10 @@ def login():
     if user is not None:
         user_data = user_schema.dump(user)
         if bcrypt.check_password_hash(user.password, q_pass):
-            # return user_schema.jsonify(user), 200
             response = make_response(
                 jsonify(
                     {"userData": UserSchema().load(user_data),
-                     "basicAuthToken": generate_basic_auth_header(q_username, q_pass)}
+                     "authHeader": generate_basic_auth_header(q_username, q_pass)}
                 ), 200
             )
             response.headers["Content-Type"] = "application/json"
@@ -154,27 +161,37 @@ def user_update(user_id):
 
         if request.form['location'].strip():
             user.location = int(request.form['location'])
-        if request.files['file'].filename.strip():
-            user.img_name = upload_file('to_cloud')
 
         password = request.form['password']
-        confirm_password = request.form['confirm-password']
+        confirm_password = request.form['confirmPassword']
 
         if password.strip():
             if password != confirm_password:
                 raise ValidationError
             if not bcrypt.check_password_hash(user.password, password):
                 user.password = bcrypt.generate_password_hash(password)
+        if request.files:
+            user.img_name = upload_file('to_cloud')
         db.session.commit()
-        return user_schema.jsonify(user)
+        # return user_schema.jsonify(user)
+        user_data = user_schema.dump(user)
+
+        response = make_response(
+            jsonify(
+                {"userData": UserSchema().load(user_data),
+                 "authHeader": generate_basic_auth_header(user.username, password)}
+            ), 200
+        )
+        response.headers["Content-Type"] = "application/json"
+        return response
     except ValidationError as err:
         return jsonify(message=err.messages), 405
 
 
-@application.route("/users", methods=['DELETE'])
+@application.route("/users/<int:id>", methods=['DELETE'])
 @auth.login_required
-def delete_user():
-    user = User.query.filter_by(id=request.args.get('id')).first()
+def delete_user(id):
+    user = User.query.filter_by(id=id).first()
     if user is None:
         return jsonify(message='User not found'), 404
     else:
