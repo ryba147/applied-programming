@@ -212,10 +212,12 @@ def post_announcement():
     author_id = request.form['author_id']
     title = request.form['title']
     description = request.form['description']
-    img_name = upload_file('to_cloud')
-    announcement_type = request.form['announcement_type']
+    anno_type = int(request.form['type'])
     event_date = request.form['event_date']
     location = request.form['location']
+    img_name = None
+    if request.files:
+        img_name = upload_file('to_cloud')
 
     test_announcement = Announcement(author_id=author_id,
                                      title=title,
@@ -224,7 +226,7 @@ def post_announcement():
                                      description=description,
                                      img_name=img_name,
                                      location=location,
-                                     type=announcement_type)
+                                     type=anno_type)
     announcement_data = announcement_schema.dump(test_announcement)
     try:
         AnnouncementSchema().load(announcement_data)

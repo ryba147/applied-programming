@@ -29,7 +29,7 @@ class Announcement(db.Model):
     title = db.Column(db.String(64), nullable=False)
     description = db.Column(db.Text, nullable=True)
     pub_date = db.Column(db.String(30), default=str(datetime.now().isoformat()), nullable=True)
-    event_date = db.Column(db.String(30), nullable=True)
+    event_date = db.Column(db.String(50), nullable=True)
     location = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=True)
     type = db.Column(db.Integer, db.ForeignKey('announcement_type.id'), default=1, nullable=False)
 
