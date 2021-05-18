@@ -9,6 +9,7 @@ from flask_httpauth import HTTPBasicAuth
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_socketio import SocketIO, send
 
 # 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -34,3 +35,4 @@ db = SQLAlchemy(application)
 bcrypt = Bcrypt(application)
 ma = Marshmallow(application)
 migrate = Migrate(application, db)
+socketio = SocketIO(application, cors_allowed_origins='*')

@@ -7,7 +7,7 @@ from flask import jsonify, request, abort, render_template, make_response
 from pip._vendor import requests
 from sqlalchemy import and_, null
 
-from announcements import application, auth, bcrypt, ALLOWED_EXTENSIONS, APP_ROOT
+from announcements import application, auth, bcrypt, ALLOWED_EXTENSIONS, APP_ROOT, socketio
 from .schemas import *
 
 
@@ -66,6 +66,12 @@ def upload_file(upload_type):
             print(os.path.join(file_dest))
 
             return unique_filename
+
+
+@socketio.on('message')
+def handle_message(msg):
+    print('Received message: ' + msg)
+    socketio.send(msg, broadcast=True)
 
 
 @application.route("/users", methods=['GET'])

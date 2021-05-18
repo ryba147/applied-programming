@@ -1,4 +1,4 @@
-from announcements import application, routes
+from announcements import application, routes, socketio
 
 if __name__ == '__main__':
-    application.run()
+    socketio.run(application)
